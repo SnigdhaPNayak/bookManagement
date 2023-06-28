@@ -1,0 +1,19 @@
+<h1 class="text-center m-5 fs-2">---Your Book List---</h1>
+<div class="w-75 m-auto shadow p-4">
+
+    <!--Displaying "The list is empty", if the number of items present in the list is zero [Using *ngIf along with ng-template for the else bloack]-->
+
+    <div *ngIf="userList.length==0; else elseBlock">
+        <p class="p-5 row justify-content-center">The list is currently empty</p>
+    </div>
+    <div class="my-3">
+        <ng-template #elseBlock>
+            <ul class="list-group" *ngFor="let item of userList">
+                <li class="list-group-item">{{item}}</li>
+            </ul>
+        </ng-template>
+    </div>
+
+    <button type="button" class="btn btn-primary my-2" (click)="selection()">Add Books</button>
+
+</div>

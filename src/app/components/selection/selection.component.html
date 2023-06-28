@@ -1,0 +1,31 @@
+<h2 class="text-center m-4 p-2">Select the Books of your choise...</h2>
+<div class="w-50 mx-auto p-3">
+
+    <div class="form-check py-2 px-4 mx-1 shadow rounded" *ngFor="let item of bookList">
+
+        <!--Setting the checkbox to be checked and disabled, if a book is already present in the user list [Using *ngIf along with ng-template for the else bloack]-->
+        <div *ngIf="userList.includes(item); else elseBlock">
+            <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
+                (change)="updateSelectedList($event)" checked disabled>
+        </div>
+        <ng-template #elseBlock>
+            <!--Setting the checkbox to be checked, if a book has been selected previously [Using *ngIf along with ng-template for the else bloack]-->
+            <div *ngIf="savedList.includes(item); else elseBlock">
+                <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
+                    (change)="updateSelectedList($event)" checked>
+            </div>
+        <ng-template #elseBlock>
+            <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
+                (change)="updateSelectedList($event)">
+            </ng-template>   
+        </ng-template>
+
+        <label class="form-check-lable fs-5" for="bookList">
+            {{item}}
+        </label>
+
+    </div>
+
+    <button type="button" class="btn btn-primary my-4" (click)="review()">Next</button>
+
+</div>

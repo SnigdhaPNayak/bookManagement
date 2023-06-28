@@ -1,0 +1,19 @@
+<h2 class="text-center m-5 p-2">Review the selected list of books...</h2>
+<div class="w-75 m-auto shadow p-4">
+
+    <!--Displaying "You haven't selected any book", if the number of items present in the list is zero [Using *ngIf along with ng-template for the else bloack]-->
+    <div class="m-3">
+        <div *ngIf="selectedList.length==0; else elseBlock">
+            <p class="p-5 row justify-content-center">You haven't selected any book</p>
+        </div>
+        <ng-template #elseBlock>
+            <ul class="list-group" *ngFor="let item of selectedList">
+                <li class="list-group-item">{{item}}</li>
+            </ul>
+        </ng-template>
+    </div>
+
+    <button type="button" class="btn btn-primary m-2" (click)="selection()">Previous</button>
+    <button type="button" class="btn btn-primary m-2" (click)="submit()">Submit</button>
+
+</div>

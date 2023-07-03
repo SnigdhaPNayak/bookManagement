@@ -4,10 +4,13 @@ import { HomeComponent } from './components/home/home.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { ReviewComponent } from './components/review/review.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
 
-  { path: '', component: HomeComponent },
+  { path: '', component: LoginComponent },
+
+  { path: 'home', component: HomeComponent },
 
   { path: 'selection', component: SelectionComponent },
 

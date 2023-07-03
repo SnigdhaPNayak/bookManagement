@@ -2,32 +2,33 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { pluck } from 'rxjs';
 import { Book } from 'src/app/Book';
+import { UserIdService } from '../userId/user-id.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookListService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private id: UserIdService) { }
 
   bookList: any[] = []
   selectedList: any[] = []
 
   //Fetching the data from the backend
-  getData(){
-
+  getData(id: any) {
     console.log("Fetching the data from the backend...")
-    return this.http.get("http://localhost:8080/books").pipe(pluck('data'))
+    return this.http.get(`http://localhost:8080/books/${id}`).pipe(pluck('value'))
 
   }
 
   //Adding books to user's book list
-  updateData(list: any) {
+  updateData(list: any, id: any) {
 
-    console.log("Adding books to user's book list...\n" + list)
-
-    let lenS = sessionStorage.length
-    let indexS = lenS + 1
+    console.log("Id: " + id)
+    console.log("list: ")
+    console.log(list)
+ 
+    let indexS = sessionStorage.length
 
     const headers = new HttpHeaders()
       .set('content-type', 'application/json')
@@ -37,7 +38,7 @@ export class BookListService {
       const obj = JSON.parse('{"bookID":' + new Book(JSON.parse(element)).getBookId() + '}');
 
       //Adding the new books to the database
-      this.http.put<any>("http://localhost:8080/updateList/1", obj, { 'headers': headers }).subscribe(value => {
+      this.http.put<any>(`http://localhost:8080/updateList/${id}`, obj, { 'headers': headers }).subscribe(value => {
         console.log(value)
       })
 
@@ -46,6 +47,8 @@ export class BookListService {
       indexS++;
 
     }
+
+    console.log("Data had been updated...")
 
   }
 

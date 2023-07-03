@@ -7,5 +7,14 @@ import { Component } from '@angular/core';
 })
 
 export class NavbarComponent {
- 
+
+  //Clearing the local storage and session storage on logout
+  logOut() {
+
+    console.log("Clearing the local storage and session storage on logout...")
+    sessionStorage.clear()
+    localStorage.clear()
+    
+  }
+
 }

@@ -11,6 +11,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './components/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { InvalidCredentialsComponent } from './components/invalid-credentials/invalid-credentials.component';
 
 @NgModule({
   declarations: [
@@ -19,14 +23,18 @@ import { HttpClientModule } from '@angular/common/http';
     SelectionComponent,
     ReviewComponent,
     ConfirmationComponent,
-    NavbarComponent
+    NavbarComponent,
+    LoginComponent,
+    InvalidCredentialsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatIconModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatSnackBarModule
    
   ],
   providers: [],

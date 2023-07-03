@@ -47,6 +47,7 @@ export class SelectionComponent {
       this.userList.push(new Book(JSON.parse(temp)).getBookName())
     }
 
+    
     //Setting the previously selected data to savedList
     this.savedList = this.savedListService.getSavedList()
 

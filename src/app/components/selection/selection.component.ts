@@ -36,8 +36,10 @@ export class SelectionComponent {
     }
 
 
+    
     //Fetching the data from the session storage
-    for (let n = 1; n <= sessionStorage.length; n++) {
+    //Have removed the =
+    for (let n = 1; n < sessionStorage.length; n++) {
       this.tempUserList.push(sessionStorage.getItem(n.toString()));
     }
     console.log("Fetching the list of books selected by the user, from session storage...\n" + this.tempUserList)

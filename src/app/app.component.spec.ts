@@ -1,35 +1,52 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('AppComponent', () => {
+
+  let app: AppComponent;
+  let fixture: ComponentFixture<AppComponent>
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule, MatIconModule
       ],
       declarations: [
-        AppComponent
-      ],
+        AppComponent, NavbarComponent
+      ]
     }).compileComponents();
+
+    //Test fixtures are predefined data sets that you load into a temporary database before running your tests
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
+  it('should create the app', () => { 
     expect(app).toBeTruthy();
   });
 
   it(`should have as title 'BookManagement'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app.title).toEqual('BookManagement');
   });
 
- /* it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('BookManagement app is running!');
-  });*/
+  //Checking if, app-navbar and router-outlet are present
+  it('should render the navbar and router outlet', () => {
+
+    //nativeElement holds the reference to the underlying DOM object
+    const compiled = fixture.nativeElement;
+
+    //querySelector looks for a element that matches the given ID
+    expect(compiled.querySelector('app-navbar')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+  });
+  
 });
+
+
+/*
+ * user-id service - SpyOn is not used in the getter method [subscribing to a http response]
+ * bookList service - Update method not working for multiple books
+*/

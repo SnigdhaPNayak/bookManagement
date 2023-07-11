@@ -8,12 +8,13 @@ export class SavedListService {
   savedList: any[] = []
 
   //Fetching the saved list
-  getSavedList() {
+  getSavedList(): any{
 
     console.log("Fetching the saved list...\n"+this.savedList)
     return this.savedList
 
   }
+
 
   //Setting the data to saved list
   setSavedList(list: any) {

@@ -69,6 +69,8 @@ export class LoginComponent {
   }
 
   openSnackBar() {
+
+    //openFormComponent is a method provided by snackBar
     this.snackBar.openFromComponent(InvalidCredentialsComponent, {
       duration: 1000,
       verticalPosition: 'top'

@@ -13,6 +13,7 @@ export class BookListService {
 
   bookList: any[] = []
   selectedList: any[] = []
+  result: any
 
   //Fetching the data from the backend
   getData(id: any) {
@@ -39,7 +40,7 @@ export class BookListService {
 
       //Adding the new books to the database
       this.http.put<any>(`http://localhost:8080/updateList/${id}`, obj, { 'headers': headers }).subscribe(value => {
-        console.log(value)
+        this.result=value
       })
 
       //Adding the new books to the session storage
@@ -48,7 +49,7 @@ export class BookListService {
 
     }
 
-    console.log("Data had been updated...")
+    console.log(this.result)
 
   }
 

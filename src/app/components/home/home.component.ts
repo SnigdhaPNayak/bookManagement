@@ -11,7 +11,10 @@ import { UserIdService } from 'src/app/services/userId/user-id.service';
 })
 export class HomeComponent {
 
-  constructor(private router: Router, private bookListService: BookListService, private userIdService: UserIdService) { }
+  constructor(private router: Router, private bookListService: BookListService, private userIdService: UserIdService) { 
+   //To overwrite the localStorage object with LocalStorageMock in test file
+    const localStorage = window.localStorage;
+  }
 
   userList: any[] = []
   tempUserList: any[] = []
@@ -59,6 +62,7 @@ export class HomeComponent {
 
     } else {
 
+      //Check the logic
       //Fetching the data from the session storage
       for (let n = 1; n < sessionStorage.length; n++) {
         this.tempUserList.push(sessionStorage.getItem(n.toString()));

@@ -8,9 +8,9 @@ describe('InvalidCredentialsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InvalidCredentialsComponent ]
+      declarations: [InvalidCredentialsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(InvalidCredentialsComponent);
     component = fixture.componentInstance;
@@ -22,15 +22,15 @@ describe('InvalidCredentialsComponent', () => {
   });
 
   //HTML
-  
+
   //Checking p tag
   it('should display "Invalid Credentials" message', () => {
-    
+
     const messageElement = fixture.debugElement.query(By.css('p'));
-  
+
     expect(messageElement).toBeTruthy();
     expect(messageElement.nativeElement.textContent).toContain('Invalid Credentials');
-    
+
   });
 
 });

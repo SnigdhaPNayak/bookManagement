@@ -24,7 +24,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the app', () => { 
+  it('should create the app', () => {
     expect(app).toBeTruthy();
   });
 
@@ -42,11 +42,16 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('app-navbar')).toBeTruthy();
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
-  
+
 });
 
 
 /*
- * user-id service - SpyOn is not used in the getter method [subscribing to a http response]
- * bookList service - Update method not working for multiple books
+
+ * home component - 
+    //Expected [object NodeList] to be falsy
+    //listItemElements is undefined
+    //expect(listItemElements).toBeFalsy();
+ * navbar component - //Check for, whether the logOut function is being called when the link is clicked
+
 */

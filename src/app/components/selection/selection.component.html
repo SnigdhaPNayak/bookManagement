@@ -14,10 +14,10 @@
                 <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
                     (change)="updateSelectedList($event)" checked>
             </div>
-        <ng-template #elseBlock>
-            <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
-                (change)="updateSelectedList($event)">
-            </ng-template>   
+            <ng-template #elseBlock>
+                <input class="form-check-input" type="checkbox" value={{item}} id="bookList"
+                    (change)="updateSelectedList($event)">
+            </ng-template>
         </ng-template>
 
         <label class="form-check-lable fs-5" for="bookList">

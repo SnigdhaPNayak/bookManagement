@@ -3,8 +3,6 @@ import { BookListService } from './book-list.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpHeaders } from '@angular/common/http';
 import { Book } from 'src/app/Book';
-import { SessionStorageMock } from '../SessionStorageMock';
-
 
 describe('BookListService', () => {
   let service: BookListService;
@@ -20,14 +18,13 @@ describe('BookListService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(BookListService);
 
-    //Calling the SessionStorageMock, when ever the session storage is called
-    const sessionStorageMock = new SessionStorageMock();
-    spyOnProperty(window, 'sessionStorage').and.returnValue(sessionStorageMock);
-
   });
 
   //Runs after the complication of each test case
   afterEach(() => {
+
+    localStorage.clear()
+    sessionStorage.clear()
 
     //Verifies that there is no unexpected or pending http request. [It will throw an error, if any unexpected requests are found]
     httpTestingController.verify();
@@ -64,12 +61,9 @@ describe('BookListService', () => {
 
   });
 
-  //Try for multiple books
-  //Getting error [Expected one matching request for criteria "Match URL: http://localhost:8080/updateList/1", found 2 requests]
-
   //Test case for update method
   it('should update data in the backend and session storage', () => {
-    const list = ['{"bookID": 1, "bookName": "Book1","selected": true }'];
+    const list = ['{"bookID": 1, "bookName": "Book1","selected": true }', '{"bookID": 2, "bookName": "Book2","selected": false }'];
     const id = 1;
 
     //Adding initial value to the session storage
@@ -77,35 +71,35 @@ describe('BookListService', () => {
 
     const expectedResponse = { message: 'UPDATED' };
 
-    //Calling the update method [http request]
-    service.updateData(list, id);
-
-
     const expectedUrl = `http://localhost:8080/updateList/${id}`;
     const expectedHeaders = new HttpHeaders().set('content-type', 'application/json');
+
+    //Calling the update method [http request]
+    service.updateData(list, id)
+
+    const requests = httpTestingController.match(expectedUrl);
+
+    expect(requests.length).toEqual(2);
+
+    expect(requests[0].request.method).toEqual('PUT');
+    expect(requests[1].request.method).toEqual('PUT');
+
+    expect(requests[0].request.headers).toEqual(expectedHeaders);
+    expect(requests[1].request.headers).toEqual(expectedHeaders);
 
     for (let i = 0; i < list.length; i++) {
 
       const element = list[i];
       const obj = JSON.parse('{"bookID":' + new Book(JSON.parse(element)).getBookId() + '}');
+      expect(requests[i].request.body).toEqual(obj);
 
-      //Creating a http mock
-      //.expectOne expects a single HTTP request to the specified URL
-      //request object is stored in req
-      const req = httpTestingController.expectOne(expectedUrl);
-
-      expect(req.request.method).toEqual('PUT');
-      expect(req.request.headers).toEqual(expectedHeaders);
-      expect(req.request.body).toEqual(obj);
-
-      //To generate a response
-      req.flush(expectedResponse);
-
-      expect(service.result).toEqual({ message: 'UPDATED' })
-      expect(sessionStorage.getItem('1')).toEqual('{"bookID": 1, "bookName": "Book1","selected": true }')
+      requests[i].flush(expectedResponse);
 
     }
-    expect(sessionStorage.length).toBe(2);
+
+    expect(service.result).toEqual(['UPDATED', 'UPDATED'])
+    //It's 3 because, user id id also stored in the session storage
+    expect(sessionStorage.length).toBe(3);
 
   });
 

@@ -13,7 +13,7 @@ export class BookListService {
 
   bookList: any[] = []
   selectedList: any[] = []
-  result: any
+  result: any[]=[]
 
   //Fetching the data from the backend
   getData(id: any) {
@@ -39,8 +39,8 @@ export class BookListService {
       const obj = JSON.parse('{"bookID":' + new Book(JSON.parse(element)).getBookId() + '}');
 
       //Adding the new books to the database
-      this.http.put<any>(`http://localhost:8080/updateList/${id}`, obj, { 'headers': headers }).subscribe(value => {
-        this.result=value
+      this.http.put<any>(`http://localhost:8080/updateList/${id}`, obj, { 'headers': headers }).pipe(pluck('message')).subscribe(value => {
+        this.result.push(value)
       })
 
       //Adding the new books to the session storage

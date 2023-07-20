@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Book } from 'src/app/Book';
 import { BookListService } from 'src/app/services/bookList/book-list.service';
-import { UserIdService } from 'src/app/services/userId/user-id.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +10,7 @@ import { UserIdService } from 'src/app/services/userId/user-id.service';
 })
 export class HomeComponent {
 
-  constructor(private router: Router, private bookListService: BookListService, private userIdService: UserIdService) { 
-   //To overwrite the localStorage object with LocalStorageMock in test file
-    const localStorage = window.localStorage;
-  }
+  constructor(private router: Router, private bookListService: BookListService) { }
 
   userList: any[] = []
   tempUserList: any[] = []

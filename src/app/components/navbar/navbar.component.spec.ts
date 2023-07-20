@@ -3,8 +3,8 @@ import { NavbarComponent } from './navbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LocalStorageMock } from 'src/app/services/LocalStorageMock';
-import { SessionStorageMock } from 'src/app/services/SessionStorageMock';
+
+import { Component } from '@angular/core';
 
 describe('NavbarComponent', () => {
 
@@ -16,7 +16,8 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [NavbarComponent],
-      imports: [MatIconModule,RouterTestingModule]
+      imports: [MatIconModule, RouterTestingModule.withRoutes([{ path: '', component: LoginMockComponent }, { path: 'home', component: HomeMockComponent }])]
+
     })
       .compileComponents();
 
@@ -28,14 +29,17 @@ describe('NavbarComponent', () => {
 
     router = TestBed.inject(Router);
 
-    //Calling the LocalStorageMock, when ever the local storage is called
-    const localStorageMock = new LocalStorageMock();
-    spyOnProperty(window, 'localStorage').and.returnValue(localStorageMock);
+  });
 
-    //Calling the SessionStorageMock, when ever the session storage is called
-    const sessionStorageMock = new SessionStorageMock();
-    spyOnProperty(window, 'sessionStorage').and.returnValue(sessionStorageMock);
+  @Component({ template: '' })
+  class LoginMockComponent { }
 
+  @Component({ template: '' })
+  class HomeMockComponent { }
+
+  afterEach(() => {
+    localStorage.clear()
+    sessionStorage.clear()
   });
 
   //Checking if the instance of the component is created
@@ -57,6 +61,23 @@ describe('NavbarComponent', () => {
     expect(localStorage.length).toEqual(0);
     expect(sessionStorage.length).toEqual(0);
 
+  });
+
+  //Some of your tests did a full page reload!
+
+  //HTML
+
+  //Test case for home link
+  it('should have a navbar-brand with the correct href attribute for home', () => {
+    const homeIcon = fixture.nativeElement.querySelector('a[href="/home"]');
+    expect(homeIcon).toBeTruthy();
+  });
+
+  //Test case for logout link
+  //Check for, whether the logOut function is being called when the link is clicked
+  it('should have a navbar-brand with the correct href attribute for logout', () => {
+    const logout = fixture.nativeElement.querySelector('a[href=""]');
+    expect(logout).toBeTruthy();
   });
 
 });

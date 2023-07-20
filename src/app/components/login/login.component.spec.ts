@@ -8,8 +8,9 @@ import { UserIdService } from 'src/app/services/userId/user-id.service';
 import { of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvalidCredentialsComponent } from '../invalid-credentials/invalid-credentials.component';
-import { SessionStorageMock } from 'src/app/services/SessionStorageMock';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
 
 describe('LoginComponent', () => {
 
@@ -22,16 +23,21 @@ describe('LoginComponent', () => {
 
   let snackBar: MatSnackBar;
 
+  let userIdServiceMock: jasmine.SpyObj<UserIdService>;
+
   //jasmine.Spy is a utility provided by jasmine framework to create function spy [It allow to track calls to a particular function and optionally modify its behavior.]
   // Declaring a varible as spy
   let openFromComponentSpy: jasmine.Spy;
 
+  userIdServiceMock = jasmine.createSpyObj('UserIdService', ['getUserId', 'setUserId']);
+
   //Runs before each test case
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatSnackBarModule, ReactiveFormsModule],
+      imports: [HttpClientTestingModule, MatSnackBarModule, ReactiveFormsModule, RouterTestingModule.withRoutes([{ path: 'userList', component: HomeMockComponent }])],
       declarations: [LoginComponent, InvalidCredentialsComponent],
-      providers: [UserIdService, Router, MatSnackBar]
+      providers: [UserIdService, Router, MatSnackBar,
+        { provide: UserIdService, useValue: userIdServiceMock }]
 
     })
       .compileComponents();
@@ -51,16 +57,16 @@ describe('LoginComponent', () => {
 
     snackBar = TestBed.inject(MatSnackBar);
 
-    //Calling the SessionStorageMock, when ever the session storage is called
-    const sessionStorageMock = new SessionStorageMock();
-    spyOnProperty(window, 'sessionStorage').and.returnValue(sessionStorageMock);
-
     //spyOn function allows to create a spy on an object and track its calls, return values, and other behaviors
     //using stub(), which means that when the openFromComponent method is called, it will not execute the actual implementation but instead do nothing 
     //Spying the openFormComponent method of snackBar
     //assiging a spy to a already declared varible
     openFromComponentSpy = spyOn(snackBar, 'openFromComponent').and.stub();
 
+  });
+
+  afterEach(() => {
+    sessionStorage.clear()
   });
 
   //Checking if the component has been created
@@ -93,8 +99,8 @@ describe('LoginComponent', () => {
     component.loginForm.setValue({ userName: 'User1', password: 'Password1' });
     const mockUserId = { userID: '1' };
 
-    spyOn(userIdService, 'getUserId').and.returnValue(of({ val: mockUserId }));
-    spyOn(userIdService, 'setUserId')
+    userIdServiceMock.getUserId.and.returnValue(of({ val: mockUserId }));
+
     spyOn(router, 'navigate');
 
     component.login();
@@ -108,7 +114,7 @@ describe('LoginComponent', () => {
   it('should show a snackbar for invalid credentials', () => {
 
     //Throwing 400 error
-    spyOn(userIdService, 'getUserId').and.returnValue(throwError({ status: 400 }));
+    userIdServiceMock.getUserId.and.returnValue(throwError({ status: 400 }));
 
     //Spying the openSnackBar method
     //Directly declaring a varible and assigning a spy
@@ -133,15 +139,69 @@ describe('LoginComponent', () => {
   });
 
   //HTML
-  
+
   //Checking h2 tag
   it('should display "Login Form" message', () => {
-    
+
     const messageElement = fixture.debugElement.query(By.css('h2'));
-  
+
     expect(messageElement).toBeTruthy();
     expect(messageElement.nativeElement.textContent).toContain('Login Form');
-    
+
   });
 
+  //Checking userName and password
+  it('should create the login form with required fields', () => {
+    const loginForm = component.loginForm;
+    expect(loginForm.get('userName')).toBeTruthy();
+    expect(loginForm.get('password')).toBeTruthy();
+  });
+
+  //Checking error message for userName
+  it('should display error message for required userName field if it is touched and empty', () => {
+
+    let userNameControl = component.loginForm.controls['userName'];
+
+    userNameControl.setValue(null);
+    userNameControl.markAsTouched();
+    fixture.detectChanges();
+
+    const errorMessageElement = fixture.nativeElement.querySelector('.form-group .userNameError');
+    expect(errorMessageElement.textContent).toContain('UserName is a Required field');
+
+  });
+
+  //Checking error message for Password
+  it('should display error message for required password field if it is touched and empty', () => {
+
+    let passwordControl = component.loginForm.controls['password'];
+
+    passwordControl.setValue(null);
+    passwordControl.markAsTouched();
+    fixture.detectChanges();
+
+    const errorMessageElement = fixture.nativeElement.querySelector('.form-group .passwordError');
+    expect(errorMessageElement.textContent).toContain('Password is a Required field');
+
+  });
+
+
+  //Checking if the method is being called on button click
+  it('should call login() function when the button is clicked', () => {
+
+    spyOn(component, 'login')
+
+    const buttonElement = fixture.nativeElement.querySelector('button');
+    buttonElement.click();
+
+    expect(component.login).toHaveBeenCalled();
+  });
+
+  //const errorMessageElement = fixture.nativeElement.querySelector('.form-group span');
+  //Even when no class name is mentioned and both of the span element are called from the above syntax, still the correct element is fetched.
+
 });
+
+@Component({ template: '' })
+class HomeMockComponent { }
+

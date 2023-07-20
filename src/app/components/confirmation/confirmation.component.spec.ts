@@ -11,10 +11,10 @@ describe('ConfirmationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConfirmationComponent,NavbarComponent ],
-      imports:[MatIconModule]
+      declarations: [ConfirmationComponent, NavbarComponent],
+      imports: [MatIconModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
@@ -29,22 +29,28 @@ describe('ConfirmationComponent', () => {
 
   //Checking if the contents of the page are present
   it('should display "Saved Successfully!" message, a home icon and a link to the home page', () => {
-  
+
     //Looks for the element, based on provided html tag name 
     const iconElement = fixture.debugElement.query(By.css('mat-icon'));
     const messageElement = fixture.debugElement.query(By.css('h1'));
     const linkElement = fixture.debugElement.query(By.css('a'));
-  
+
     //Checks if a instance is created [returns true or false]
     expect(iconElement).toBeTruthy();
     expect(messageElement).toBeTruthy();
     expect(linkElement).toBeTruthy();
-  
+
     //To check the text contain of a element
     expect(iconElement.nativeElement.textContent).toContain('check_circle_outline');
     expect(messageElement.nativeElement.textContent).toContain('Saved Successfully!');
     expect(linkElement.nativeElement.textContent).toContain('Home Page');
 
   });
-  
+
+  //Test case for home link
+  it('should have a navbar-brand with the correct href attribute for home', () => {
+    const homeIcon = fixture.nativeElement.querySelector('a[href="/home"]');
+    expect(homeIcon).toBeTruthy();
+  });
+
 });

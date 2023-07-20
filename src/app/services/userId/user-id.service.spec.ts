@@ -36,7 +36,6 @@ describe('UserIdService', () => {
   });
 
   //Test case for getter method
-  //spyOn is not used
   it('should fetch the user ID', () => {
 
     const mockCredentials = { userName: 'User1', password: 'Password1' };
@@ -81,8 +80,6 @@ describe('UserIdService', () => {
 
     service.setUserId(mockCredentials);
 
-    //.toHaveBeenCalled()[expects a spy] is checked when spyOn is used
-    expect(service.setUserId).toHaveBeenCalled();
     expect(credentials).toEqual(mockCredentials);
   });
 });

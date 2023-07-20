@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Book } from 'src/app/Book';
-import { BookListService } from 'src/app/services/bookList/book-list.service';
 import { SavedListService } from 'src/app/services/savedList/saved-list.service';
 
 @Component({
@@ -11,7 +10,7 @@ import { SavedListService } from 'src/app/services/savedList/saved-list.service'
 })
 export class SelectionComponent {
 
-  constructor(private router: Router, private bookListService: BookListService, private savedListService:SavedListService) { }
+  constructor(private router: Router, private savedListService:SavedListService) { }
 
   bookList: any[] = []
   userList: any[] = []

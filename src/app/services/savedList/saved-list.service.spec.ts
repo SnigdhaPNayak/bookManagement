@@ -6,7 +6,7 @@ describe('SavedListService', () => {
 
   //Runs before each test case
   beforeEach(() => {
-    TestBed.configureTestingModule({  
+    TestBed.configureTestingModule({
     });
 
     //Creating a instance of the service
@@ -18,36 +18,22 @@ describe('SavedListService', () => {
     expect(service).toBeTruthy();
   });
 
-  //Test case for the getter method
-  it('should fetch the saved list', () => {
-    const mockSavedList = ['Book1', 'Book2'];
+  //Test case for setter method
+  it('should set the data to savedList', () => {
+    const mockList = ['Book1', 'Book2'];
 
-    spyOn(service, 'getSavedList').and.returnValue(mockSavedList);
+    service.setSavedList(mockList);
 
-    const result = service.getSavedList();
-
-    //.toHaveBeenCalled()[expects a spy] is checked when spyOn is used
-    expect(service.getSavedList).toHaveBeenCalled();
-    expect(result).toEqual(mockSavedList);
+    expect(service.savedList).toEqual(mockList);
   });
 
-  //Test case for the setter method
-  //save the received data inside the call back function of .callFake(), while using spyOn for the setter method [Otherwise the data does not get updated]
-  it('should set the data to savedList', () => {
-    const mockSavedList = ['Book1', 'Book2'];
+  //Test case for the getter method
+  it('should fetch the saved list', () => {
 
-    let savedList: any;
+    service.savedList = ['Book1', 'Book2'];
+    const result = service.getSavedList();
 
-    //.callFake() allows to provide a custom function, when spy is called
-    spyOn(service, 'setSavedList').and.callFake((value: any) => {
-      savedList = value;
-    });
-
-    service.setSavedList(mockSavedList);
-
-    //.toHaveBeenCalled()[expects a spy] is checked when spyOn is used
-    expect(service.setSavedList).toHaveBeenCalled();
-    expect(savedList).toEqual(mockSavedList);
+    expect(result).toEqual(['Book1', 'Book2']);
   });
 
 });

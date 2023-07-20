@@ -4,22 +4,29 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SavedListService } from 'src/app/services/savedList/saved-list.service';
-import { LocalStorageMock } from 'src/app/services/LocalStorageMock';
-import { SessionStorageMock } from 'src/app/services/SessionStorageMock';
 import { Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
 
 describe('SelectionComponent', () => {
   let component: SelectionComponent;
   let fixture: ComponentFixture<SelectionComponent>;
   let savedListService: SavedListService;
   let router: Router;
+  let savedListServiceMock: jasmine.SpyObj<SavedListService>;
+
+  savedListServiceMock = jasmine.createSpyObj('SavedListService', ['getSavedList', 'setSavedList']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SelectionComponent, NavbarComponent],
-      imports: [MatIconModule, HttpClientTestingModule],
-      providers: [SavedListService],
+      imports: [MatIconModule, HttpClientTestingModule, RouterTestingModule.withRoutes([{ path: 'review', component: ReviewMockComponent }])],
+      providers: [SavedListService,
+
+        { provide: SavedListService, useValue: savedListServiceMock }
+
+      ]
     })
       .compileComponents();
 
@@ -29,11 +36,11 @@ describe('SelectionComponent', () => {
     savedListService = TestBed.inject(SavedListService);
     router = TestBed.inject(Router);
 
-    const localStorageMock = new LocalStorageMock();
-    spyOnProperty(window, 'localStorage').and.returnValue(localStorageMock);
+  });
 
-    const sessionStorageMock = new SessionStorageMock();
-    spyOnProperty(window, 'sessionStorage').and.returnValue(sessionStorageMock);
+  afterEach(() => {
+    localStorage.clear()
+    sessionStorage.clear()
   });
 
   //Testing if a instance of the component is created
@@ -50,7 +57,7 @@ describe('SelectionComponent', () => {
     sessionStorage.setItem('id', '1')
     sessionStorage.setItem('1', JSON.stringify({ bookID: 1, bookName: 'Book 1', selected: true }));
 
-    spyOn(savedListService, 'getSavedList').and.returnValue(['Book 4', 'Book 5']);
+    savedListServiceMock.getSavedList.and.returnValue(['Book 4', 'Book 5']);
 
     component.ngOnInit();
 
@@ -63,25 +70,24 @@ describe('SelectionComponent', () => {
 
   //Checking the updateSelectedList function
   it('should update the selectedList based on checkbox event', () => {
-    
+
     //Initially adding some data to the selectedList
     component.selectedList = ['Book 1', 'Book 2'];
 
     component.updateSelectedList({ target: { checked: true, value: 'Book 3' } });
     expect(component.selectedList).toEqual(['Book 1', 'Book 2', 'Book 3']);
 
-    
+
     component.updateSelectedList({ target: { checked: false, value: 'Book 2' } });
     expect(component.selectedList).toEqual(['Book 1', 'Book 3']);
   });
 
   //Checking the review method
   it('should set selectedList as saved list and navigate to /review', () => {
-   
+
     //Adding some mock data to the selected list
     component.selectedList = ['Book 1', 'Book 2'];
 
-    spyOn(savedListService, 'setSavedList');
     spyOn(router, 'navigate');
 
     component.review();
@@ -94,12 +100,52 @@ describe('SelectionComponent', () => {
 
   //Checking h2 tag
   it('should display "Select the Books of your choise..." message', () => {
-    
+
     const messageElement = fixture.debugElement.query(By.css('h2'));
-  
+
     expect(messageElement).toBeTruthy();
     expect(messageElement.nativeElement.textContent).toContain('Select the Books of your choise...');
-    
+
+  });
+
+  //Checking for the checked and diabled status for the checkbox
+  it('should render unchecked or diabled checkbox depending on if book is present in user list or saved list', () => {
+
+    component.bookList = ['Book 1', 'Book 2', 'Book 3', 'Book 4'];
+    component.userList = ['Book 2', 'Book 3'];
+    component.savedList = ['Book 4'];
+    fixture.detectChanges();
+
+    const checkboxElement = fixture.nativeElement.querySelectorAll('.form-check-input');
+    expect(checkboxElement).toBeTruthy()
+
+    //Book not present in either the user list or saved list
+    expect(checkboxElement[0].checked).toBe(false);
+    expect(checkboxElement[0].disabled).toBe(false);
+
+    //Book present in the user list
+    expect(checkboxElement[1].disabled).toBe(true);
+    expect(checkboxElement[1].checked).toBe(true);
+    expect(checkboxElement[2].disabled).toBe(true);
+    expect(checkboxElement[2].checked).toBe(true);
+
+    //Book Book present in the saved list
+    expect(checkboxElement[3].disabled).toBe(false);
+    expect(checkboxElement[3].checked).toBe(true);
+
+  });
+
+  //Checking if the review method is being called on button click
+  it('should call review() function when the button is clicked', () => {
+    spyOn(component, 'review');
+
+    const buttonElement = fixture.nativeElement.querySelector('button');
+    buttonElement.click();
+
+    expect(component.review).toHaveBeenCalled();
   });
 
 });
+
+@Component({ template: '' })
+class ReviewMockComponent { }

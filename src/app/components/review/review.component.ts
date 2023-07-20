@@ -12,7 +12,7 @@ import { UserIdService } from 'src/app/services/userId/user-id.service';
 })
 export class ReviewComponent {
 
-  constructor(private router: Router, private bookListService: BookListService, private savedListService: SavedListService, private userIdService: UserIdService) { }
+  constructor(private router: Router, private bookListService: BookListService, private savedListService: SavedListService) { }
 
   selectedList: any[] = []
   bookList: any[] = []

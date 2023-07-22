@@ -31,12 +31,6 @@ describe('NavbarComponent', () => {
 
   });
 
-  @Component({ template: '' })
-  class LoginMockComponent { }
-
-  @Component({ template: '' })
-  class HomeMockComponent { }
-
   afterEach(() => {
     localStorage.clear()
     sessionStorage.clear()
@@ -74,10 +68,31 @@ describe('NavbarComponent', () => {
   });
 
   //Test case for logout link
-  //Check for, whether the logOut function is being called when the link is clicked
-  it('should have a navbar-brand with the correct href attribute for logout', () => {
+  it('should have a navbar-brand with the correct href attribute for logout',() => {
+
     const logout = fixture.nativeElement.querySelector('a[href=""]');
     expect(logout).toBeTruthy();
+
   });
+
+  //Test case for logOut() method call
+  it('should call logOut() when logout link is clicked', () => {
+    spyOn(component, 'logOut');
+
+    const logout = fixture.nativeElement.querySelector('a[href=""]');
+
+    //Using logout.click(), results in a full page reload in an infinit loop
+    logout.dispatchEvent(new Event('click'));
+
+    fixture.detectChanges();
+    expect(component.logOut).toHaveBeenCalled();
+
+  });
+
+  @Component({ template: '' })
+  class LoginMockComponent { }
+
+  @Component({ template: '' })
+  class HomeMockComponent { }
 
 });

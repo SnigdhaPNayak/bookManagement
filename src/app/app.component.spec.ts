@@ -44,14 +44,3 @@ describe('AppComponent', () => {
   });
 
 });
-
-
-/*
-
- * home component - 
-    //Expected [object NodeList] to be falsy
-    //listItemElements is undefined
-    //expect(listItemElements).toBeFalsy();
- * navbar component - //Check for, whether the logOut function is being called when the link is clicked
-
-*/

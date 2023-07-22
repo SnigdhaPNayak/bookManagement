@@ -151,9 +151,8 @@ describe('HomeComponent', () => {
     const listItemElements = fixture.nativeElement.querySelectorAll('.list-group-item');
     expect(listItemElements.length).toEqual(0);
 
-    //Expected [object NodeList] to be falsy
-    //listItemElements is undefined
     //expect(listItemElements).toBeFalsy();
+    //This statement is not true because, querySelectorAll returns a NodeList, and an empty NodeList is not considered falsy.
   });
 
   //Checking if the selection method is being called on button click
